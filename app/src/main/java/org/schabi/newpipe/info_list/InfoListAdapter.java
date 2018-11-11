@@ -27,6 +27,8 @@ import org.schabi.newpipe.util.OnClickGesture;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.meekchopp.pipedown.BadApples;
+
 /*
  * Created by Christian Schabesberger on 01.08.16.
  *
