@@ -96,7 +96,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import es.meekchopp.pipedown.BadApples;
 import icepick.State;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -633,14 +635,21 @@ public class VideoDetailFragment
             setRelatedStreamsVisibility(View.GONE);
         }
 
-        if (info.getRelatedStreams() != null
-                && !info.getRelatedStreams().isEmpty() && showRelatedStreams) {
+        List<InfoItem> relatedStreams = info.getRelatedStreams().stream().filter(i -> {
+            if (i.getInfoType() != InfoItem.InfoType.STREAM) {
+                StreamInfoItem si = (StreamInfoItem) i;
+                return !BadApples.getInstance().contains(si.getUploaderUrl());
+            }
+            return true;
+        }).collect(Collectors.toList());
+
+        if (relatedStreams != null && !relatedStreams.isEmpty() && showRelatedStreams) {
             //long first = System.nanoTime(), each;
-            int to = info.getRelatedStreams().size() >= INITIAL_RELATED_VIDEOS
+            int to = relatedStreams.size() >= INITIAL_RELATED_VIDEOS
                     ? INITIAL_RELATED_VIDEOS
-                    : info.getRelatedStreams().size();
+                    : relatedStreams.size();
             for (int i = 0; i < to; i++) {
-                InfoItem item = info.getRelatedStreams().get(i);
+                InfoItem item = relatedStreams.get(i);
                 //each = System.nanoTime();
                 relatedStreamsView.addView(infoItemBuilder.buildView(relatedStreamsView, item));
                 //if (DEBUG) Log.d(TAG, "each took " + ((System.nanoTime() - each) / 1000000L) + "ms");
