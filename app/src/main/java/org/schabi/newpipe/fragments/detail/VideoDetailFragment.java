@@ -96,7 +96,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import es.meekchopp.pipedown.BadApples;
 import icepick.State;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
