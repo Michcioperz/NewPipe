@@ -113,7 +113,16 @@ public class InfoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
 
             int offsetStart = sizeConsideringHeaderOffset();
-            infoItemList.addAll(data);
+            for (InfoItem infoItem : data) {
+                if (infoItem.getInfoType() == InfoItem.InfoType.STREAM) {
+                    StreamInfoItem streamInfoItem = (StreamInfoItem) infoItem;
+                    if (BadApples.getInstance().contains(streamInfoItem.getUploaderUrl())) {
+                        Log.d(TAG, "dropping " + infoItem + " because of the uploader");
+                        continue;
+                    }
+                }
+                infoItemList.add(infoItem);
+            }
 
             if (DEBUG) {
                 Log.d(TAG, "addInfoItemList() after > offsetStart = " + offsetStart + ", infoItemList.size() = " + infoItemList.size() + ", header = " + header + ", footer = " + footer + ", showFooter = " + showFooter);
@@ -137,7 +146,14 @@ public class InfoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
 
             int positionInserted = sizeConsideringHeaderOffset();
-            infoItemList.add(data);
+            if (infoItem.getInfoType() == InfoItem.InfoType.STREAM) {
+                StreamInfoItem streamInfoItem = (StreamInfoItem) infoItem;
+                if (BadApples.getInstance().contains(streamInfoItem.getUploaderUrl())) {
+                    Log.d(TAG, "dropping " + infoItem + " because of the uploader");
+                    return;
+                }
+            }
+            infoItemList.add(infoItem);
 
             if (DEBUG) {
                 Log.d(TAG, "addInfoItem() after > position = " + positionInserted + ", infoItemList.size() = " + infoItemList.size() + ", header = " + header + ", footer = " + footer + ", showFooter = " + showFooter);
